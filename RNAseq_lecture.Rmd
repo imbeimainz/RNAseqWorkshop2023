@@ -296,6 +296,30 @@ Among the most widely adopted workflows:
 
 ---
 
+# The essential
+
+--
+
+- Expression quantification
+
+--
+
+- Data exploration: PCA, gene plots
+
+--
+
+- Differential analysis: DE modeling, design, effect size, variability, significance
+
+--
+
+- Functional interpretation: gene sets, pathways, biological themes
+
+--
+
+We will revisit this at the end of the practical session!
+
+---
+
 # Differential analysis types for RNA-seq
 
 No single available standardized workflow  
