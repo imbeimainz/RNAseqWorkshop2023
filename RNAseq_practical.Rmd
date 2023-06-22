@@ -2,14 +2,14 @@
 title: >
   Transcriptome Data Analysis - hands-on session
 subtitle: >
-  GTIPI SummerSchool
-  <p align="center">
-  </p>
-  <a href="https://imbeimainz.github.io/GTIPI2022"><img src="images/gtipi_logo.png" alt="" height="150"/></a>
+  Bulk RNA-seq Workshop - IMBEI, University Medical Center Mainz</br>
+  Instructors: Annekathrin Nedwed, Alicia Schulze, Federico Marini</br>
+  <a href="https://imbeimainz.github.io/GTIPI2022"><img src="images/gtipi_logo.png" alt="" height="100"/></a>
+  <small>Material adapted from the GTIPI practical session by</small>
 author:
 - name: <a href="https://csoneson.github.io">Charlotte Soneson (charlotte.soneson@fmi.ch)</a><br><a href="https://www.fmi.ch/bioinformatics/">FMI Basel</a><br><a href="https://twitter.com/CSoneson">`r icons::fontawesome('twitter')` `@CSoneson`</a>
 - name: <a href="https://federicomarini.github.io">Federico Marini (marinif@uni-mainz.de)</a><br><a href="https://www.unimedizin-mainz.de/imbei/">IMBEI, University Medical Center Mainz</a><br><a href="https://twitter.com/FedeBioinfo">`r icons::fontawesome('twitter')` `@FedeBioinfo`</a>
-date: "2022/06/02"
+date: "2023/06/23"
 output: 
   bookdown::html_document2:
     toc: true
@@ -18,7 +18,7 @@ output:
     code_folding: show
     code_download: true
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 bibliography: references.bib
 ---
 
