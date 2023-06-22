@@ -3,9 +3,9 @@ title: >
   Transcriptome Data Analysis - hands-on session
 subtitle: >
   Bulk RNA-seq Workshop - IMBEI, University Medical Center Mainz</br>
+  <small>Material adapted from the GTIPI practical session by</small>
   Instructors: Annekathrin Nedwed, Alicia Schulze, Federico Marini</br>
   <a href="https://imbeimainz.github.io/GTIPI2022"><img src="images/gtipi_logo.png" alt="" height="100"/></a>
-  <small>Material adapted from the GTIPI practical session by</small>
 author:
 - name: <a href="https://csoneson.github.io">Charlotte Soneson (charlotte.soneson@fmi.ch)</a><br><a href="https://www.fmi.ch/bioinformatics/">FMI Basel</a><br><a href="https://twitter.com/CSoneson">`r icons::fontawesome('twitter')` `@CSoneson`</a>
 - name: <a href="https://federicomarini.github.io">Federico Marini (marinif@uni-mainz.de)</a><br><a href="https://www.unimedizin-mainz.de/imbei/">IMBEI, University Medical Center Mainz</a><br><a href="https://twitter.com/FedeBioinfo">`r icons::fontawesome('twitter')` `@FedeBioinfo`</a>
@@ -86,6 +86,28 @@ Many parts of this tutorial are based on a published RNA-seq workflow
 available via [F1000Research](http://f1000research.com/articles/4-1070)
 [@Love2015RNASeq] and as a [Bioconductor
 package](https://www.bioconductor.org/packages/release/workflows/html/rnaseqGene.html).
+
+Along this notebook that you can render yourself - we will show you how during the
+workshop - you will encounter some small quiz sections to keep up with your progress
+throughout the entire workflow.
+
+## Setup recommendation
+
+We recommend you use the following setup for an effective learning experience
+
+* Clone or download the workshop repo, available at https://github.com/imbeimainz/RNAseqWorkshop2023
+
+* (Make sure you have R/RStudio/Bioconductor all setup, as expected)
+
+* Work in RStudio, ideally clicking on the RStudio project file
+
+* Open up the `RNAseq_practical.Rmd` file, inside RStudio
+
+<!-- * As a check, refer to `RNAseq_practical_run_all.html` file - don't use that during the workshop -->
+
+* Execute the code chunks/read the information provided
+
+Have fun learning - together!
 
 ## Experimental data
 
@@ -246,6 +268,8 @@ object contains sample annotations in the `colData` slot.
 colData(st)
 ```
 
+### Quiz {-}
+
 # Summarizing on the gene level
 
 As we saw, the features in the *SummarizedExperiment* object above are individual 
@@ -320,6 +344,9 @@ pipelines, we round the estimated counts here (note that in practice,
 ```{r roundcounts}
 assay(sg, "counts") <- round(assay(sg, "counts"))
 ```
+
+### Quiz {-}
+
 
 
 # Representing counts for differential expression packages
@@ -467,6 +494,10 @@ rows of the count matrix). One difference compared to the *DESeqDataSet* is that
 the experimental design is not defined when creating the *DGEList*, but later in
 the workflow.
 
+### Quiz {-}
+
+
+
 # Filtering
 
 It is often helpful to filter out lowly expressed genes before continuing 
@@ -608,6 +639,9 @@ plotMDS(dge, top = 500, labels = NULL,
         col = as.numeric(dge$samples$condition_name), 
         cex = 0.5, gene.selection = "common")
 ```
+
+### Quiz {-}
+
 
 
 # Differential expression analysis
@@ -838,6 +872,11 @@ tt.treat <- edgeR::topTags(treatres, n = nrow(dge), sort.by = "none")
 ```
 
 
+
+### Quiz {-}
+
+
+
 # Plotting results
 
 ## MA plot with DESeq2
@@ -972,6 +1011,11 @@ write.table(cbind(id = rownames(resOrderedDF), resOrderedDF),
             row.names = FALSE)
 ```
 
+
+### Quiz {-}
+
+
+
 # Functional analysis
 
 In order to interpret the differential expression analysis results in terms 
@@ -1045,6 +1089,10 @@ GeneTonic(gtl = gtl_macrophage)
 ## or if expecting to upload at runtime... (e.g. used as a server-like app)
 GeneTonic()
 ```
+
+
+### Quiz {-}
+
 
 
 # Bonus: Differential transcript expression with swish
@@ -1184,7 +1232,7 @@ plot(rank(dxr[match(shared, dxr$featureID), "pvalue"]),
 It is good practice to always include a list of the software versions that were used to perform a given analysis, for reproducibility and trouble-shooting purposes. 
 One way of achieving this is via the `sessionInfo()` function. 
 
-```{r}
+```{r sessioninfo}
 sessionInfo()
 ```
 
