@@ -37,14 +37,20 @@ knitr::opts_chunk$set(
 <!-- </script> -->
 
 
-```{r style, echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
+```{r style, echo=FALSE, message=FALSE, warning=FALSE, results="asis", eval = TRUE}
 suppressPackageStartupMessages({
     library(BiocStyle)
     library(knitr)
     library(rmarkdown)
 })
 options(width = 80)
-opts_chunk$set(fig.width = 6, fig.height = 6, eval = TRUE)
+
+eval_all <- FALSE
+
+eval_dte <- FALSE
+eval_dtu <- FALSE
+
+opts_chunk$set(fig.width = 6, fig.height = 6, eval = eval_all)
 ```
 
 # Introduction
@@ -976,7 +982,7 @@ Among these, *topGO* and *clusterProfiler* are two popular options.
 We can perform the analysis by following the instructions in the next chunk.
 In each case, the gene sets that are tested for enrichment are obtained from the [Gene Ontology](http://geneontology.org/) 'biological process' catalog. 
 
-```{r}
+```{r run-functionalenrichment}
 library(GeneTonic)
 de_symbols_IFNg_vs_naive <- deseqresult2df(res, FDR = 0.05)$symbol
 bg_ids <- rowData(dds)$SYMBOL[rowSums(counts(dds)) > 0]
@@ -1012,7 +1018,7 @@ To simplify the interpretation of transcriptome datasets, the *GeneTonic* packag
 
 As a first step, we convert the output of each tool to a consolidated "standard" format, as expected by GeneTonic - this is the first step to construct a `GeneTonicList` object, as a single container to perform all operations on afterwards, be it in the app or offline by using its functionality in scripts/notebooks.
 
-```{r}
+```{r shake-funcres}
 res_enrich_topGO <- shake_topGOtableResult(topgo_DE_macrophage_IFNg_vs_naive)
 res_enrich_clupro <- shake_enrichResult(clupro_DE_macrophage_IFNg_vs_naive)
 
@@ -1032,7 +1038,7 @@ saveRDS(gtl_macrophage, "gtl_macrophage.RDS")
 
 After that, we would simply have to call the `GeneTonic()` function specifying the `gtl` parameter - this can also be passed at runtime
 
-```{r eval=FALSE}
+```{r launchgt, eval=FALSE}
 ## and that is it!
 GeneTonic(gtl = gtl_macrophage)
 
@@ -1049,21 +1055,21 @@ make use of the transcript-level abundance estimates. In addition, we need the
 inferential replicates. Since we ignored these when importing the data above, 
 we will re-import it here. 
 
-```{r importswish}
+```{r importswish, eval=eval_dte}
 head(coldata)
 st <- tximeta(coldata = coldata, type = "salmon", dropInfReps = FALSE)
 ```
 
 We can check that the inferential replicates were imported as well: 
 
-```{r checkinfreps}
+```{r checkinfreps, eval=eval_dte}
 assayNames(st)
 ```
 
 Since we are interested in comparing the `naive` and `IFNg` groups, we 
 subset our object to these groups.
 
-```{r subsetst}
+```{r subsetst, eval=eval_dte}
 st <- st[, st$condition_name %in% c("naive", "IFNg")]
 st$condition_name <- factor(st$condition_name, c("naive", "IFNg"))
 ```
@@ -1072,7 +1078,7 @@ Next, we run the DTE analysis with *swish*. First we'll scale the inferential
 replicates, followed by labeling the rows with sufficient counts for running 
 differential expression, and then calculating the statistics. 
 
-```{r swishdte, message = FALSE}
+```{r swishdte, message = FALSE, eval=eval_dte}
 library(fishpond)
 st <- scaleInfReps(st, lengthCorrect = TRUE)
 st <- labelKeep(st)
@@ -1083,7 +1089,7 @@ st <- swish(st, x = "condition_name", pair = "line_id", nperms = 100)
 
 The results are stored in `mcols(st)`. 
 
-```{r checkst}
+```{r checkst, eval=eval_dte}
 head(mcols(st))
 table(mcols(st)$qvalue < 0.05)
 ## Most significant transcripts
@@ -1094,7 +1100,7 @@ hist(mcols(st)$pvalue, col = "grey")
 
 We can plot the results for some of the most significant transcripts.
 
-```{r plotdte}
+```{r plotdte, eval=eval_dte}
 plotInfReps(st, idx = rownames(tophits)[1],
             x = "condition_name", cov = "line_id")
 plotInfReps(st, idx = rownames(tophits)[43],
@@ -1108,7 +1114,7 @@ We can also use the plotting functions of *swish* to plot the inferential
 replicates for the top-ranked genes in the differential gene expression 
 analysis. 
 
-```{r plotswishdge}
+```{r plotswishdge, eval=eval_dte}
 ## Summarize on the gene level
 sg_inf <- summarizeToGene(st)
 sg_inf <- sg_inf[, sg_inf$condition_name %in% c("naive", "IFNg")]
@@ -1124,7 +1130,7 @@ Finally, we show how to run differential transcript usage analysis with
 With *swish*, we can build upon the data imported earlier to calculate 
 isoform proportions and perfom a permutation test based on these. 
 
-```{r swishdtu}
+```{r swishdtu, eval=eval_dtu}
 iso <- isoformProportions(st)
 iso <- swish(iso, x = "condition_name", pair = "line_id", 
              nperms = 100)
@@ -1140,7 +1146,7 @@ observed library size to be comparable in size to the actual counts. For
 *DEXSeq*, we further subset the transcripts to those on chromosome 18, for 
 computational time reasons. 
 
-```{r dexseq}
+```{r dexseq, eval=eval_dtu}
 head(coldata)
 st <- tximeta(coldata = coldata, type = "salmon", 
               countsFromAbundance = "scaledTPM")
@@ -1166,7 +1172,7 @@ head(dxr)
 
 Finally, we compare the p-value ranks for the genes shared by the two analyses. 
 
-```{r plotswishdexseq}
+```{r plotswishdexseq, eval=eval_dtu}
 shared <- intersect(dxr$featureID, rownames(mcols(iso)))
 plot(rank(dxr[match(shared, dxr$featureID), "pvalue"]),
      rank(mcols(iso)[shared, "pvalue"]), cex = 0.1,
