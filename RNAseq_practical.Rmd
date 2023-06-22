@@ -270,6 +270,10 @@ colData(st)
 
 ### Quiz {-}
 
+* How many samples are there in this `macrophage` dataset? How many are there in your (typical) RNA-seq experiment?
+* Is the quantification done at the transcript level or at the gene level? How can you go from one to the other? And vice versa?
+* What is "better"? Think of DGE, DTU, DTE... and of your experimental setting
+
 # Summarizing on the gene level
 
 As we saw, the features in the *SummarizedExperiment* object above are individual 
@@ -347,7 +351,10 @@ assay(sg, "counts") <- round(assay(sg, "counts"))
 
 ### Quiz {-}
 
-
+* Can you start your DE analysis with normalized values such as TPMs?
+* Where can I store additional information about the samples?
+* Where can I store additional information about the features? (What can your features be?)
+* Can you think of a way to read in the required information if you start (AAAAAAAH) from Excel files?
 
 # Representing counts for differential expression packages
 
@@ -496,7 +503,10 @@ the workflow.
 
 ### Quiz {-}
 
-
+* How important is the definition of the design?
+* How do I quantify the effect size? "In which direction" is this to be interpreted?
+* Is it possible to change the reference in the comparison?
+* If you have multiple experimental factors, how should you proceed? Think of 2 condition-2 tissues/cell types
 
 # Filtering
 
@@ -523,6 +533,11 @@ dim(dge)
 
 Importantly, the group information should *not* be used to define the filtering 
 criterion, since that can interfere with the validity of the p-values downstream.
+
+### Quiz {-}
+
+* Removing unexpressed features might influence what you do when integrating different analyses. How could we proceed in such cases?
+* What if I download publicly available data and some genes are missing? What can be some of the possible reasons for this? 
 
 # Exploratory analysis and visualization
 
@@ -642,7 +657,10 @@ plotMDS(dge, top = 500, labels = NULL,
 
 ### Quiz {-}
 
-
+* What if I do not see a clear separation in my PCA plot? Is it still ok to proceed?
+* What should I do if I detect/am aware of a batch effect?
+* Raw data vs normalized data vs transformed data: Which one should I use in "all the cases" I could encounter?
+* "I have seen people using tSNE/UMAP in single cell data, why shouldn't we do the same here?" 
 
 # Differential expression analysis
 
@@ -875,7 +893,10 @@ tt.treat <- edgeR::topTags(treatres, n = nrow(dge), sort.by = "none")
 
 ### Quiz {-}
 
-
+* A feature being called DE: "Why is my expected shortlisted gene not showing up?" What possible factors can play a role in the feature being above or below the significance threshold?
+* Shall I subset my DE results to the genes only detected as DE? Why?
+* The results between DESeq2 and edgeR might differ. Which one is "correct"? How can you better appreciate the existing commonalities and differences in the DE analysis?
+* The thought above is valid also for the process of integrating different DE analyses (i.e. using the same method, but "comparing different groups"). What can you think of to represent these results?
 
 # Plotting results
 
@@ -1014,7 +1035,10 @@ write.table(cbind(id = rownames(resOrderedDF), resOrderedDF),
 
 ### Quiz {-}
 
-
+* Is visualization of data and results *really that important*?
+* Volcano plot or MA plot, what is "better"? Think of the information every plot type displays
+* Can I always plot expression values for a single gene, or for a set of genes (i.e. independently of their DE status)?
+* What can I do if I want to know more on one "novel" gene, possibly relevant with my experiment?
 
 # Functional analysis
 
@@ -1093,7 +1117,9 @@ GeneTonic()
 
 ### Quiz {-}
 
-
+* Genes or geneset: What should I use as a key to interpretation?
+* What is the main advantage of using standardized objects vs a bunch of tables?
+* "Ok, I would still like you Bioinformaticians on board for my project. What should I expect to happen?"
 
 # Bonus: Differential transcript expression with swish
 
